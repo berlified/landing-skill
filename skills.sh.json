@@ -1,0 +1,11 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Landing pages",
+      "description": "Design and build complete landing pages from page type, layout orientation and visual style.",
+      "skills": ["landing"]
+    }
+  ]
+}

@@ -23,6 +23,12 @@ Use:
 /landing --type sales --layout split-left --style minimal "Acme, AI invoicing for freelancers"
 ```
 
+In Codex the same command runs as `$landing ...`. In a fresh session with no context, plain language works too — the developer's prompt carries the whole triple:
+
+> Using the landing skill, build a [TYPE] page for "[product]". Layout: [LAYOUT]. Style: [STYLE].
+
+Treat any prompt of that shape as a complete brief: do not re-ask for type, layout or style, just confirm and build. Stacks with `frontend-design` (art direction) and `web-design-guidelines` (accessibility audit) when they are installed.
+
 That's it. No API keys, nothing to `npm install` (except `npm install` inside `preview/` to run the visual explorer).
 
 ## The one idea that matters

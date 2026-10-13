@@ -123,6 +123,44 @@ export const COPY = {
 
 export const INSTALL_CMD = 'npx skills add berlified/landing-skill -g -a claude-code'
 
+// Agents developers paste prompts into — mirrors skills.sh per-agent install UX
+export const AGENTS = [
+  { id: 'claude-code', name: 'Claude Code', install: 'npx skills add berlified/landing-skill -g -a claude-code', invoke: '/landing', tryCmd: 'npx skills use berlified/landing-skill --skill landing --agent claude-code' },
+  { id: 'codex', name: 'Codex', install: 'npx skills add berlified/landing-skill -g -a codex', invoke: '$landing', tryCmd: 'npx skills use berlified/landing-skill --skill landing --agent codex' },
+  { id: 'opencode', name: 'OpenCode', install: 'npx skills add berlified/landing-skill -g -a opencode', invoke: '/landing', tryCmd: 'npx skills use berlified/landing-skill --skill landing --agent opencode' },
+  { id: 'cursor', name: 'Cursor', install: 'npx skills add berlified/landing-skill -g -a cursor', invoke: '/landing', tryCmd: 'npx skills use berlified/landing-skill --skill landing --agent cursor' },
+]
+
+// The developer → agent handoff: one paste-ready prompt carrying the whole triple
+export function agentPrompt(agentId, type, layout, style, product) {
+  const ag = AGENTS.find(a => a.id === agentId) || AGENTS[0]
+  return `Using the landing skill (berlified/landing-skill), build a complete landing page for "${product}".
+
+Page type: ${type.id} (${type.name} — ${type.goal.toLowerCase()}).
+Layout orientation: ${layout.id} (${layout.name} — ${layout.desc.toLowerCase()}).
+Visual style: ${style.id} (${style.name} — ${style.note.toLowerCase()}).
+
+Deliver one self-contained HTML file with inline CSS. Sections in this order: ${type.sections.join(', ')}. Primary CTA: "${type.cta}". Responsive, accessible, real copy — no lorem ipsum, no dead buttons. (Equivalent slash command: ${ag.invoke} --type ${type.id} --layout ${layout.id} --style ${style.id} "${product}")`
+}
+
+// Hero auto-rotation: the "live gallery" moment — real pages, not mockups
+export const HERO_ROTATION = [
+  { type: 'waitlist', layout: 'bento', style: 'dark', product: 'Nebula, AI habit tracker' },
+  { type: 'sales', layout: 'split-left', style: 'minimal', product: 'Acme, AI invoicing for freelancers' },
+  { type: 'pricing', layout: 'centered', style: 'glass', product: 'Cloudset, usage-based hosting' },
+  { type: 'webinar', layout: 'editorial', style: 'serif', product: 'Crumb, sourdough masterclass' },
+]
+
+// Copy-paste cookbook: the 6 jobs developers actually hire a landing page for
+export const COOKBOOK = [
+  { title: 'Launch my waitlist', desc: 'Teaser + queue + referral hook for a pre-launch product.', type: 'waitlist', layout: 'bento', style: 'dark', product: 'Nebula, AI habit tracker' },
+  { title: 'Sell my SaaS', desc: 'Long-form proof + pricing + FAQ that closes the tab.', type: 'sales', layout: 'split-left', style: 'minimal', product: 'Acme, AI invoicing for freelancers' },
+  { title: 'Price it right', desc: 'Three plans, toggle, guarantee — convert on the table.', type: 'pricing', layout: 'centered', style: 'glass', product: 'Cloudset, usage-based hosting' },
+  { title: 'Book more demos', desc: 'Calendar-first page with qualification baked in.', type: 'demo', layout: 'formfirst', style: 'product', product: 'Datawise, warehouse analytics' },
+  { title: 'Fill my webinar', desc: 'Date, learnings, speaker, countdown to save-a-seat.', type: 'webinar', layout: 'editorial', style: 'serif', product: 'Crumb, sourdough masterclass' },
+  { title: 'Go viral pre-launch', desc: 'Referral ladder with rewards that earns the share.', type: 'viral', layout: 'singlescreen', style: 'bold', product: 'Poster drop, limited art print' },
+]
+
 export function landingCommand(type, layout, style, product = 'Acme, AI invoicing for freelancers') {
   return `/landing --type ${type} --layout ${layout} --style ${style} "${product}"`
 }
