@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { PALETTES, TILE_META, LAYOUTS, AGENTS, INSTALL_CMD, tileHTML, gridSpec, agentPromptIso, buildStandalone } from './data.js'
+import { PALETTES, TILE_META, LAYOUTS, AGENTS, INSTALL_CMD, tileHTML, gridSpec, agentPromptIso, buildStandalone, flatShadow, flatDepth } from './data.js'
 
 function copy(text, setCopied) {
   navigator.clipboard?.writeText(text).then(() => {
@@ -32,7 +32,7 @@ function IsoScene({ layout, palette, tilt, spin, extrude, floatOn, orbitOn, cell
       <div className="iso-spun">
         <div className="iso-plane" key={layout.id + palette.id}>
           {layout.tiles.map((tl, i) => (
-            <div key={i} className="iso-tile" style={{ '--cs': tl[1], '--rs': tl[2], '--h': Math.round(tl[3] * extrude) + 'px', '--i': i }}>
+            <div key={i} className="iso-tile" style={{ gridColumn: 'span ' + tl[1], gridRow: 'span ' + tl[2], '--h': Math.round(tl[3] * extrude) + 'px', '--i': i }}>
               <div className="iso-rise">
                 <div className="iso-side-l" />
                 <div className="iso-side-r" />
@@ -42,6 +42,27 @@ function IsoScene({ layout, palette, tilt, spin, extrude, floatOn, orbitOn, cell
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  )
+}
+
+/* ---------- Designer view: readable cards, stepped extrude ---------- */
+function FlatScene({ layout, palette, extrude, cell, brand, tag }) {
+  const vars = {
+    '--ib-bg': palette.bg, '--ib-card': palette.card, '--ib-ink': palette.ink,
+    '--ib-muted': palette.muted, '--ib-accent': palette.accent, '--ib-line': palette.line,
+    '--cols': layout.cols, '--cell': (cell || 118) + 'px',
+  }
+  return (
+    <div className="flat-scene" style={vars}>
+      <div className="flat-grid" key={layout.id + palette.id}>
+        {layout.tiles.map((tl, i) => (
+          <div key={i} className="flat-tile" style={{ gridColumn: 'span ' + tl[1], gridRow: 'span ' + tl[2], '--i': i, boxShadow: flatShadow(Math.round(tl[3] * extrude), palette.sideL, palette.sideR) }}>
+            <div className="flat-card" dangerouslySetInnerHTML={{ __html: tileHTML(tl[0], brand) }} />
+            {tag ? <span className="flat-tag">{tl[0]}</span> : null}
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -70,6 +91,7 @@ const FAQS = [
 export default function App() {
   const [layoutId, setLayoutId] = useState('mosaic')
   const [paletteId, setPaletteId] = useState('lime')
+  const [view, setView] = useState('flat')
   const [tilt, setTilt] = useState(54)
   const [spin, setSpin] = useState(45)
   const [extrude, setExtrude] = useState(1)
@@ -82,8 +104,8 @@ export default function App() {
   const layout = LAYOUTS.find(l => l.id === layoutId)
   const palette = PALETTES.find(p => p.id === paletteId)
   const ag = AGENTS.find(a => a.id === agent)
-  const prompt = agentPromptIso(agent, layout, palette, tilt, spin, extrude, floatOn, brand)
-  const code = useMemo(() => buildStandalone(layout, palette, tilt, spin, extrude, floatOn, brand), [layout, palette, tilt, spin, extrude, floatOn, brand])
+  const prompt = agentPromptIso(agent, view, layout, palette, tilt, spin, extrude, floatOn, brand)
+  const code = useMemo(() => buildStandalone(view, layout, palette, tilt, spin, extrude, floatOn, brand), [view, layout, palette, tilt, spin, extrude, floatOn, brand])
   const spec = gridSpec(layout, extrude)
 
   const loadLayout = (id) => {
@@ -119,7 +141,7 @@ export default function App() {
             </div>
           </div>
           <div>
-            <IsoScene layout={LAYOUTS.find(l => l.id === 'mosaic')} palette={PALETTES[0]} tilt={54} spin={45} extrude={1} floatOn={true} orbitOn={false} cell={104} brand={brand} tag={false} tall={true} />
+            <FlatScene layout={LAYOUTS.find(l => l.id === 'mosaic')} palette={PALETTES[0]} extrude={1} cell={92} brand={brand} tag={false} />
             <div className="stage-note" style={{ marginTop: 10 }}>mosaic × lime-dark · {LAYOUTS.find(l => l.id === 'mosaic').tiles.length} tiles · hover any tile — it brightens. <a href="#playground" style={{ color: 'var(--accent)' }}>Remix this →</a></div>
           </div>
         </header>
@@ -127,7 +149,7 @@ export default function App() {
         <div className="pg" id="playground">
           <div className="pg-head">
             <b>◧ Playground — {layout.name} × {palette.name}</b>
-            <span>{layout.tiles.length} tiles · tilt {tilt}° · spin {spin}° · ×{extrude}</span>
+            <span>{layout.tiles.length} tiles · {view === 'flat' ? 'designer 2.5D' : 'tilt ' + tilt + '° · spin ' + spin + '°'} · ×{extrude}</span>
           </div>
           <div className="pg-body">
             <div className="pg-col">
@@ -145,9 +167,15 @@ export default function App() {
                   </button>
                 ))}
               </div>
+              <h3>View</h3>
+              <div className="seg">
+                <button className={view === 'flat' ? 'on' : ''} onClick={() => setView('flat')}>Designer</button>
+                <button className={view === 'iso' ? 'on' : ''} onClick={() => setView('iso')}>True iso</button>
+              </div>
+              <div className="viewnote">{view === 'flat' ? 'Readable cards, stepped extrude. Text stays horizontal.' : 'Real projection: tilt + spin. Text follows faces — keep it short.'}</div>
               <h3>Projection</h3>
-              <div className="slider"><label><span>Tilt</span><span>{tilt}°</span></label><input type="range" min="0" max="70" value={tilt} onChange={e => setTilt(+e.target.value)} /></div>
-              <div className="slider"><label><span>Spin</span><span>{spin}°</span></label><input type="range" min="0" max="90" value={spin} onChange={e => setSpin(+e.target.value)} /></div>
+              <div className={'slider' + (view === 'flat' ? ' off' : '')}><label><span>Tilt</span><span>{tilt}°</span></label><input type="range" min="0" max="70" value={tilt} disabled={view === 'flat'} onChange={e => setTilt(+e.target.value)} /></div>
+              <div className={'slider' + (view === 'flat' ? ' off' : '')}><label><span>Spin</span><span>{spin}°</span></label><input type="range" min="0" max="90" value={spin} disabled={view === 'flat'} onChange={e => setSpin(+e.target.value)} /></div>
               <div className="slider"><label><span>Extrude</span><span>×{extrude}</span></label><input type="range" min="0.4" max="1.6" step="0.1" value={extrude} onChange={e => setExtrude(+e.target.value)} /></div>
               <h3>Motion</h3>
               <div className="toggle"><span>Float</span><button className={floatOn ? 'on' : ''} onClick={() => setFloatOn(!floatOn)}>{floatOn ? 'on' : 'off'}</button></div>
@@ -156,8 +184,12 @@ export default function App() {
               <input value={brand} onChange={e => setBrand(e.target.value)} style={{ width: '100%', background: '#0a0a0e', border: '1px solid var(--line)', borderRadius: 10, color: 'var(--ink)', padding: '10px 12px', font: 'inherit', fontSize: 13 }} />
             </div>
             <div className="stage">
-              <IsoScene layout={layout} palette={palette} tilt={tilt} spin={spin} extrude={extrude} floatOn={floatOn} orbitOn={orbitOn} cell={118} brand={brand} tag={true} tall={false} />
-              <div className="stage-note">Spec: {spec}. Tile tags show kind. Drag the sliders — the projection is live.</div>
+              {view === 'flat' ? (
+                <FlatScene layout={layout} palette={palette} extrude={extrude} cell={112} brand={brand} tag={true} />
+              ) : (
+                <IsoScene layout={layout} palette={palette} tilt={tilt} spin={spin} extrude={extrude} floatOn={floatOn} orbitOn={orbitOn} cell={112} brand={brand} tag={true} tall={false} />
+              )}
+              <div className="stage-note">Spec: {spec}. Tile tags show kind. {view === 'flat' ? 'Depth is stepped shadow — fully responsive.' : 'Drag the sliders — the projection is live.'}</div>
             </div>
             <div className="pg-col">
               <div className="cmdbox">
@@ -174,7 +206,7 @@ export default function App() {
               </div>
               <div className="cmdbox">
                 <h4>Standalone HTML — {(code.length / 1024).toFixed(1)} KB, zero deps</h4>
-                <code>{'<html> ' + layout.tiles.length + ' tiles · ' + palette.id + ' · tilt ' + tilt + '° …full file →'}</code>
+                <code>{'<html> ' + layout.tiles.length + ' tiles · ' + palette.id + ' · ' + view + ' view …full file →'}</code>
                 <div className="row">
                   <button className="btn btn-primary btn-small" onClick={() => copy(code, setCopied)}>Copy code</button>
                   <button className="btn btn-small" onClick={() => download('iso-bento-' + layout.id + '-' + palette.id + '.html', code)}>Download .html</button>
@@ -198,7 +230,7 @@ export default function App() {
           <div className="grid layouts">
             {LAYOUTS.map((l, li) => (
               <div key={l.id} className="card">
-                <IsoScene layout={l} palette={PALETTES[li % PALETTES.length]} tilt={54} spin={45} extrude={1} floatOn={true} orbitOn={false} cell={56} brand={brand} tag={false} tall={false} />
+                <FlatScene layout={l} palette={PALETTES[li % PALETTES.length]} extrude={1} cell={52} brand={brand} tag={false} />
                 <code>{l.id} · {l.cols} cols · {l.tiles.length} tiles</code>
                 <b>{l.name}</b>
                 <p>{l.desc}</p>

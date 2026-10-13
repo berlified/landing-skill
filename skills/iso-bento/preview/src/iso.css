@@ -20,11 +20,11 @@
 @keyframes isoOrbit{to{transform:rotateZ(calc(var(--spin) + 360deg));}}
 .iso-plane{
   transform-style:preserve-3d; transform:rotateX(var(--tilt));
-  display:grid; grid-template-columns:repeat(var(--cols), 1fr);
-  grid-auto-rows:var(--cell); gap:22px;
-  max-width:640px; margin:0 auto;
+  display:grid; grid-template-columns:repeat(var(--cols), minmax(0, 1fr));
+  grid-auto-rows:var(--cell); gap:24px;
+  width:100%; max-width:640px; margin:0 auto;
 }
-.iso-tile{position:relative; transform-style:preserve-3d; grid-column:span var(--cs); grid-row:span var(--rs); animation:tileIn .55s both; animation-delay:calc(var(--i) * 65ms);}
+.iso-tile{position:relative; transform-style:preserve-3d; min-width:0; min-height:0; animation:tileIn .45s ease-out both; animation-delay:calc(var(--i) * 65ms);}
 .iso-rise{position:absolute; inset:0; transform-style:preserve-3d; animation:floaty 5.2s ease-in-out infinite; animation-delay:calc(var(--i) * -.75s);}
 .iso-viewport.still .iso-rise{animation:none;}
 .iso-side-l{position:absolute; top:0; left:0; height:100%; width:var(--h); transform-origin:left center; transform:rotateY(-90deg); background:var(--ib-sideL); filter:brightness(.92);}
@@ -47,7 +47,7 @@
 
 /* ---- tile content (shared look w/ export) ---- */
 .t-kick{font-size:9px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--ib-accent);}
-.t-big{font-size:30px; font-weight:800; letter-spacing:-.02em; line-height:1.1;}
+.t-big{font-size:clamp(20px, 2.6vw + 12px, 28px); font-weight:800; letter-spacing:-0.02em; line-height:1.08; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .t-delta{font-size:11px; font-weight:700; color:var(--ib-accent);}
 .t-sub{font-size:10.5px; color:var(--ib-muted); margin-top:4px;}
 .t-minibars{display:flex; align-items:flex-end; gap:3px; height:26px; margin-top:6px;}
@@ -67,3 +67,42 @@
 
 /* flat (non-iso) tile cards for the tile strip */
 .flattile{background:var(--ib-card); border:1px solid var(--ib-line); border-radius:12px; padding:12px; color:var(--ib-ink); min-height:120px; font-size:12px;}
+
+/* ============ Designer view: screen-aligned cards, stepped extrude ============ */
+.flat-scene{
+  border-radius:18px; padding:30px 28px 40px; position:relative; overflow:hidden;
+  background:
+    radial-gradient(500px 260px at 50% 0%, color-mix(in srgb, var(--ib-accent) 10%, transparent), transparent 70%),
+    var(--ib-bg);
+  border:1px solid var(--ib-line);
+}
+.flat-grid{
+  display:grid; grid-template-columns:repeat(var(--cols), minmax(0, 1fr));
+  grid-auto-rows:var(--cell); gap:26px; max-width:680px; margin:0 auto;
+}
+.flat-tile{position:relative; min-width:0; min-height:0; animation:tileIn .45s ease-out both; animation-delay:calc(var(--i) * 60ms);}
+.flat-card{
+  height:100%; background:var(--ib-card); border:1px solid var(--ib-line);
+  border-top-color:color-mix(in srgb, #fff 16%, transparent);
+  border-radius:14px; padding:14px; color:var(--ib-ink); overflow:hidden;
+  font-size:13px; line-height:1.45; transition:filter .18s, border-color .18s;
+}
+.flat-tile:hover .flat-card{filter:brightness(1.1); border-color:var(--ib-accent);}
+.flat-tile:active .flat-card{transform:scale(.985); transition:transform 100ms ease-out;}
+.flat-tag{
+  position:absolute; top:10px; right:12px; z-index:2;
+  font-family:ui-monospace,monospace; font-size:10px; color:var(--ib-muted);
+  background:color-mix(in srgb, var(--ib-bg) 70%, transparent);
+  border:1px solid var(--ib-line); border-radius:7px; padding:2px 7px;
+}
+
+/* Apple §14: reduced motion + transparency — cross-fade, never slide/spring */
+@media (prefers-reduced-motion: reduce){
+  .iso-tile, .flat-tile{animation:none;}
+  .iso-rise{animation:none !important;}
+  .iso-viewport.orbit .iso-spun{animation:none;}
+}
+@media (prefers-reduced-transparency: reduce){
+  .topbar{background:var(--bg);}
+  .flat-card, .iso-card{border-top-color:var(--ib-line);}
+}
