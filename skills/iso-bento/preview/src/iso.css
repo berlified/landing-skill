@@ -43,7 +43,7 @@
   border:1px solid var(--ib-line); border-radius:7px; padding:2px 7px;
 }
 @keyframes floaty{0%,100%{transform:translateZ(0)}50%{transform:translateZ(10px)}}
-@keyframes tileIn{from{opacity:0; transform:translateZ(-46px)}to{opacity:1; transform:none}}
+@keyframes tileIn{from{opacity:0; filter:blur(6px); transform:translateY(14px);} to{opacity:1; filter:blur(0); transform:none;}}
 
 /* ---- tile content (shared look w/ export) ---- */
 .t-kick{font-size:9px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--ib-accent);}
@@ -101,8 +101,51 @@
   .iso-tile, .flat-tile{animation:none;}
   .iso-rise{animation:none !important;}
   .iso-viewport.orbit .iso-spun{animation:none;}
+  .t-spark .draw{stroke-dashoffset:0; animation:none;}
+  .t-spark .fill{opacity:.18; animation:none;}
+  .t-bars i{transform:none; animation:none;}
+  .t-track{animation:none;}
+  .t-code .ln{opacity:1; animation:none;}
+  .t-code .caret{animation:none;}
+  .t-orbit .o1,.t-orbit .o2{animation:none;}
+  .t-ring .prog{stroke-dashoffset:28; animation:none;}
+  .t-btn.t-shimmer::after{display:none;}
 }
 @media (prefers-reduced-transparency: reduce){
   .topbar{background:var(--bg);}
   .flat-card, .iso-card{border-top-color:var(--ib-line);}
 }
+
+/* ============ Magic motion: living tile backgrounds (pure CSS) ============ */
+.t-zoom{transition:transform .3s ease-out;}
+.flat-tile:hover .t-zoom, .iso-tile:hover .t-zoom{transform:scale(1.05);}
+.t-ticker{font-variant-numeric:tabular-nums;}
+.t-spark .draw{stroke-dasharray:100; stroke-dashoffset:100; animation:draw 1.4s .25s ease-out forwards;}
+.t-spark .fill{opacity:0; animation:fadein .6s ease-out 1.3s forwards;}
+@keyframes draw{to{stroke-dashoffset:0;}}
+@keyframes fadein{to{opacity:.18;}}
+.t-bars i{transform:scaleY(0); transform-origin:bottom; animation:grow .55s cubic-bezier(.2,.7,.3,1.2) forwards; animation-delay:calc(.2s + var(--i, 0) * .07s);}
+@keyframes grow{to{transform:scaleY(1);}}
+.t-marquee{overflow:hidden; margin:8px -4px 2px;}
+.t-track{display:flex; gap:6px; width:max-content; animation:scrollX 16s linear infinite;}
+.t-marquee:hover .t-track{animation-play-state:paused;}
+@keyframes scrollX{to{transform:translateX(-50%);}}
+.t-chip{display:inline-flex; align-items:center; gap:6px; font-size:10px; font-weight:600; border:1px solid var(--ib-line); border-radius:99px; padding:4px 10px 4px 4px; white-space:nowrap; background:color-mix(in srgb, var(--ib-bg) 60%, transparent);}
+.t-chip b{width:20px; height:20px; border-radius:99px; background:var(--ib-accent); color:var(--ib-bg); font-size:8px; font-weight:800; display:grid; place-items:center;}
+.t-code .ln{display:block; opacity:0; animation:lineIn .3s ease-out forwards; animation-delay:var(--d, 0s);}
+@keyframes lineIn{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
+.t-code .caret{display:inline-block; width:7px; height:12px; background:var(--ib-accent); vertical-align:-1px; animation:blink 1.1s steps(2) infinite;}
+@keyframes blink{50%{opacity:0;}}
+.t-orbit{position:relative; height:92px; margin:2px 0;}
+.t-orbit .o1,.t-orbit .o2{position:absolute; left:50%; top:50%; border:1px solid var(--ib-accent); border-radius:99px; opacity:.55;}
+.t-orbit .o1{width:76px; height:76px; margin:-38px 0 0 -38px; animation:spinSlow 14s linear infinite;}
+.t-orbit .o2{width:50px; height:50px; margin:-25px 0 0 -25px; opacity:.8; animation:spinRev 9s linear infinite;}
+.t-orbit .o1::before,.t-orbit .o2::before{content:''; position:absolute; top:-3px; left:50%; width:6px; height:6px; margin-left:-3px; border-radius:99px; background:var(--ib-accent);}
+.t-orbit .core{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:22px; color:var(--ib-ink);}
+@keyframes spinSlow{to{transform:rotate(360deg);}}
+@keyframes spinRev{to{transform:rotate(-360deg);}}
+.t-ring .prog{animation:ringFill 1.5s .35s cubic-bezier(.3,.7,.3,1) forwards;}
+@keyframes ringFill{to{stroke-dashoffset:28;}}
+.t-btn.t-shimmer{position:relative; overflow:hidden; isolation:isolate;}
+.t-btn.t-shimmer::after{content:''; position:absolute; inset:0; background:linear-gradient(110deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%); transform:translateX(-130%); animation:shine 2.8s ease-in-out infinite;}
+@keyframes shine{55%,100%{transform:translateX(130%);}}

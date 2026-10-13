@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { PALETTES, TILE_META, LAYOUTS, AGENTS, INSTALL_CMD, tileHTML, agentPromptIso, buildStandalone, flatShadow } from './data.js'
 
 function copy(text, setCopied) {
@@ -109,6 +109,23 @@ export default function App() {
 
   const prevLayout = () => setLayoutIdx(i => (i - 1 + LAYOUTS.length) % LAYOUTS.length)
   const nextLayout = () => setLayoutIdx(i => (i + 1) % LAYOUTS.length)
+
+  // Magic number ticker: count up every .t-ticker on (re)mount; static text is the fallback
+  useEffect(() => {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const els = document.querySelectorAll('.t-ticker[data-count]')
+    els.forEach(el => {
+      const target = +el.dataset.count, prefix = el.dataset.prefix || ''
+      const t0 = performance.now(), dur = 1600
+      const fmt = n => prefix + Math.round(n).toLocaleString('en-US')
+      const step = t => {
+        const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3)
+        el.textContent = fmt(target * e)
+        if (p < 1) requestAnimationFrame(step)
+      }
+      requestAnimationFrame(step)
+    })
+  }, [layoutIdx, paletteId, view, brand])
   const scrollTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView() }
 
   const totalCount = LAYOUTS.length + PALETTES.length + TILE_META.length
