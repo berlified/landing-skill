@@ -1,0 +1,11 @@
+/* templates/styles.css — 10 style token sets. Import ONE via [data-style] on <html> or :root. */
+:root[data-style="minimal"]{--bg:#fff;--panel:#f4f4f5;--ink:#0a0a0b;--muted:#52525b;--accent:#4f46e5;--accent-ink:#fff;--line:#e4e4e7;--radius:12px;--font:Inter,system-ui,sans-serif;--shadow:0 8px 30px rgb(0 0 0/.06)}
+:root[data-style="bold"]{--bg:#fafaf9;--panel:#fff;--ink:#111;--muted:#444;--accent:#ff4d00;--accent-ink:#fff;--line:#111;--radius:4px;--font:Archivo,"Space Grotesk",system-ui,sans-serif;--shadow:none}
+:root[data-style="product"]{--bg:#f8fafc;--panel:#fff;--ink:#0f172a;--muted:#475569;--accent:#4f46e5;--accent-ink:#fff;--line:#e2e8f0;--radius:16px;--font:Inter,system-ui,sans-serif;--shadow:0 30px 80px rgb(2 6 23/.18)}
+:root[data-style="illustration"]{--bg:#fff7ed;--panel:#ffedd5;--ink:#431407;--muted:#9a3412;--accent:#ea580c;--accent-ink:#fff;--line:#fed7aa;--radius:24px;--font:Nunito,Quicksand,system-ui,sans-serif;--shadow:none}
+:root[data-style="photo"]{--bg:#0c0a09;--panel:#1c1917;--ink:#fafaf9;--muted:#d6d3d1;--accent:#fff;--accent-ink:#000;--line:rgb(255 255 255/.14);--radius:18px;--font:Inter,system-ui,sans-serif;--shadow:none}
+:root[data-style="dark"]{--bg:#09090b;--panel:#131316;--ink:#fafafa;--muted:#a1a1aa;--accent:#a3e635;--accent-ink:#09090b;--line:rgb(255 255 255/.08);--radius:14px;--font:Inter,"Space Grotesk",system-ui,sans-serif;--shadow:0 0 40px rgb(163 230 53/.25)}
+:root[data-style="glass"]{--bg:#fafaff;--panel:rgb(255 255 255/.6);--ink:#1e1b4b;--muted:#55548a;--accent:#7c3aed;--accent-ink:#fff;--line:rgb(124 58 237/.18);--radius:20px;--font:Inter,system-ui,sans-serif;--shadow:0 20px 60px rgb(124 58 237/.15)}
+:root[data-style="brutalist"]{--bg:#fffdf5;--panel:#fff;--ink:#000;--muted:#333;--accent:#ffd02b;--accent-ink:#000;--line:#000;--radius:0px;--font:"Archivo Black",Archivo,monospace,sans-serif;--shadow:6px 6px 0 #000}
+:root[data-style="soft"]{--bg:#f6f9ff;--panel:#fff;--ink:#1e293b;--muted:#64748b;--accent:#0ea5e9;--accent-ink:#fff;--line:#e0f2fe;--radius:28px;--font:Inter,system-ui,sans-serif;--shadow:0 12px 40px rgb(14 165 233/.15)}
+:root[data-style="serif"]{--bg:#faf6ef;--panel:#fff;--ink:#1c1917;--muted:#78716c;--accent:#9a3412;--accent-ink:#fff;--line:#e7e5e4;--radius:6px;--font:Fraunces,Newsreader,Georgia,serif;--shadow:none}

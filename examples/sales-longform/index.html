@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Acme — AI invoicing for freelancers</title>
+<meta name="description" content="Get paid twice as fast without chasing invoices." />
+<style>
+  :root{
+    --bg:#fff; --panel:#f4f4f5; --ink:#0a0a0b; --muted:#52525b;
+    --accent:#4f46e5; --accent-ink:#fff; --line:#e4e4e7;
+    --radius:12px; --font:Inter,system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  header.nav{border-bottom:1px solid var(--line);position:sticky;top:0;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(12px);z-index:10}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{font-weight:800;letter-spacing:-.02em}
+  .nav-links{display:flex;gap:24px;font-size:14px;color:var(--muted)}
+  .nav-links a{color:inherit;text-decoration:none}
+  .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border-radius:var(--radius);font-weight:600;font-size:15px;text-decoration:none;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:var(--accent);color:var(--accent-ink)}
+  .btn-ghost{border-color:var(--line);color:var(--ink)}
+  .hero{padding:88px 0 64px}
+  /* LAYOUT: split-left — swap to centered/bento/etc per references/layouts.md */
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+  .kicker{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+  h1{font-size:clamp(36px,5vw,60px);line-height:1.05;letter-spacing:-.03em;margin-bottom:16px}
+  .sub{font-size:19px;color:var(--muted);max-width:34ch;margin-bottom:28px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .micro{font-size:13px;color:var(--muted)}
+  .visual{background:var(--panel);border:1px solid var(--line);border-radius:calc(var(--radius) + 4px);aspect-ratio:4/3;display:grid;place-items:center;color:var(--muted);font-size:14px}
+  .logos{display:flex;gap:28px;flex-wrap:wrap;padding:24px 0;border-block:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:600}
+  section.block{padding:64px 0}
+  h2{font-size:clamp(26px,3.4vw,38px);letter-spacing:-.02em;margin-bottom:12px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+  .card{border:1px solid var(--line);border-radius:var(--radius);padding:24px;background:var(--bg)}
+  .card b{display:block;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:15px}
+  .quote{border-left:3px solid var(--accent);padding-left:20px;font-size:20px;margin-top:8px}
+  form.capture{display:flex;gap:8px;margin-top:20px;max-width:440px}
+  form.capture input{flex:1;min-height:48px;border:1px solid var(--line);border-radius:var(--radius);padding:0 16px;font:inherit}
+  footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-size:13px}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  @media (max-width:720px){
+    .hero{padding:56px 0 40px}
+    .hero-grid{grid-template-columns:1fr}
+    .grid3{grid-template-columns:1fr}
+    form.capture{flex-direction:column}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-inner">
+  <div class="logo">Acme</div>
+  <nav class="nav-links" aria-label="Primary"><a href="#features">Features</a><a href="#proof">Customers</a><a href="#pricing">Pricing</a></nav>
+  <a class="btn btn-primary" style="min-height:40px" href="#cta">Start free</a>
+</div></header>
+
+<main>
+  <!-- HERO (TYPE=sales, LAYOUT=split-left) -->
+  <section class="hero"><div class="wrap hero-grid">
+    <div>
+      <p class="kicker">New · AI invoicing</p>
+      <h1>Finally, get paid in days, not months</h1>
+      <p class="sub">Acme writes, sends and chases invoices for you — without the awkward follow-ups.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#cta">Start free</a>
+        <a class="btn btn-ghost" href="#proof">See proof</a>
+      </div>
+      <p class="micro">Free 14-day trial · No card · 4.9/5 from 2,300 freelancers</p>
+    </div>
+    <div class="visual" role="img" aria-label="Product screenshot placeholder">product visual</div>
+  </div></section>
+
+  <div class="wrap"><div class="logos"><span>Forbes</span><span>TC</span><span>Wired</span><span>FastCo</span><span>Verge</span></div></div>
+
+  <!-- BENEFITS -->
+  <section class="block" id="features"><div class="wrap">
+    <h2>Everything after "send"</h2>
+    <div class="grid3">
+      <div class="card"><b>Auto-chase</b><p>Polite reminders go out on day 3, 7, 14. You never nudge.</p></div>
+      <div class="card"><b>One-click pay</b><p>Card, bank, Apple Pay links inside every invoice.</p></div>
+      <div class="card"><b>Late-fee guard</b><p>Terms enforced automatically,raper-free.</p></div>
+    </div>
+  </div></section>
+
+  <!-- PROOF -->
+  <section class="block" id="proof"><div class="wrap">
+    <h2>Loved by independents</h2>
+    <p class="quote">"Went from 41 days average to 6. It paid for itself by Tuesday." — Maya R., designer</p>
+  </div></section>
+
+  <!-- FINAL CTA -->
+  <section class="block" id="cta"><div class="wrap card" style="text-align:center;padding:48px 24px">
+    <h2>Send your first invoice today</h2>
+    <p style="color:var(--muted);margin-bottom:20px">Free 14 days. Keep everything if you stay.</p>
+    <form class="capture" style="margin-inline:auto" action="#" method="post">
+      <label for="email" class="micro" style="position:absolute;left:-9999px">Email</label>
+      <input id="email" name="email" type="email" required placeholder="you@studio.com" />
+      <button class="btn btn-primary" type="submit">Start free</button>
+    </form>
+  </div></section>
+</main>
+
+<footer><div class="wrap">© 2026 Acme · Privacy · Terms</div></footer>
+</body>
+</html>
