@@ -181,7 +181,7 @@ export default function App() {
               <div className="toggle"><span>Float</span><button className={floatOn ? 'on' : ''} onClick={() => setFloatOn(!floatOn)}>{floatOn ? 'on' : 'off'}</button></div>
               <div className="toggle"><span>Auto-orbit</span><button className={orbitOn ? 'on' : ''} onClick={() => setOrbitOn(!orbitOn)}>{orbitOn ? 'on' : 'off'}</button></div>
               <h3>Brand</h3>
-              <input value={brand} onChange={e => setBrand(e.target.value)} style={{ width: '100%', background: '#0a0a0e', border: '1px solid var(--line)', borderRadius: 10, color: 'var(--ink)', padding: '10px 12px', font: 'inherit', fontSize: 13 }} />
+              <input className="textinput" value={brand} onChange={e => setBrand(e.target.value)} />
             </div>
             <div className="stage">
               {view === 'flat' ? (
