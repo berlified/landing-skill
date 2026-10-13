@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { TYPES, LAYOUTS, STYLES, INSTALL_CMD, landingCommand, TOTAL } from './data.js'
+import { TYPES, LAYOUTS, STYLES, COPY, INSTALL_CMD, landingCommand, parseProduct, TOTAL } from './data.js'
 
 function copy(text, setCopied) {
   navigator.clipboard?.writeText(text).then(() => {
@@ -8,55 +8,263 @@ function copy(text, setCopied) {
   })
 }
 
-function Skeleton({ layout, style, typeName }) {
-  const css = {
-    '--skel-bg': style.bg, '--skel-ink': style.ink,
-    '--skel-muted': style.muted, '--skel-accent': style.accent,
-    '--skel-line': style.line, '--skel-radius': style.radius + 'px',
+const HEADING_FONT = {
+  minimal: 'Inter,system-ui,-apple-system,sans-serif',
+  bold: '"Arial Black",Archivo,"Space Grotesk",system-ui,sans-serif',
+  product: 'Inter,system-ui,-apple-system,sans-serif',
+  illustration: 'Nunito,Quicksand,ui-rounded,system-ui,sans-serif',
+  photo: 'Inter,system-ui,-apple-system,sans-serif',
+  dark: '"Space Grotesk",Inter,system-ui,sans-serif',
+  glass: 'Inter,system-ui,-apple-system,sans-serif',
+  brutalist: '"Archivo Black","Arial Black",Impact,monospace,sans-serif',
+  soft: 'Inter,system-ui,-apple-system,sans-serif',
+  serif: 'Fraunces,Georgia,"Times New Roman",serif',
+}
+const BODY_FONT = 'Inter,system-ui,-apple-system,sans-serif'
+
+/* ---------- hero visual per TYPE: a realistic product mock, not a gray box ---------- */
+function HeroVisual({ typeId, style, brand }) {
+  const c = COPY[typeId]
+  if (typeId === 'app') {
+    return (
+      <div className="rp-phone">
+        <div className="rp-phone-notch" />
+        <div className="rp-phone-brand">{brand}</div>
+        <div className="rp-phone-balance">$12,480 <span>collected</span></div>
+        {['Maya — $850 · Paid ✓', 'Jonas — $1,200 · Due Fri', 'Priya — $640 · Sent'].map((x, i) => (
+          <div key={i} className="rp-phone-row">{x}</div>
+        ))}
+        <div className="rp-btn solid sm">{c.cta1}</div>
+        <div className="rp-badges"><span> App Store</span><span> Google Play</span></div>
+      </div>
+    )
   }
-  const nav = (
-    <div className="skel-nav">
-      <div className="skel-logo" />
-      <div className="skel-links"><i /><i /><i /></div>
-      <div className="skel-cta" />
-    </div>
-  )
-  const h1 = (<><div className="skel-h1" /><div className="skel-h1 short" /></>)
-  const subs = (<><div className="skel-sub s2" /><div className="skel-sub s3" /></>)
-  const btns = (<div className="skel-btnrow"><div className="skel-btn" /><div className="skel-btn ghost" /></div>)
-  const visual = (label = 'visual') => <div className="skel-visual">{label}</div>
-  const cards3 = (
-    <div className="skel-cards">
-      {[0, 1, 2].map(i => <div key={i} className="skel-card"><i /><i /><i /></div>)}
-    </div>
-  )
-  const form = (
-    <div className="skel-form">
-      <div className="skel-input" /><div className="skel-input" />
-      <div className="skel-btn" style={{ width: '100%' }} />
-    </div>
-  )
-  let body = null
-  switch (layout) {
-    case 'centered': body = (<><div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>{h1}{subs}{btns}</div>{visual(typeName)}</>); break
-    case 'split-left': body = (<div className="skel-2col"><div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{h1}{subs}{btns}</div>{visual(typeName)}</div>); break
-    case 'split-right': body = (<div className="skel-2col">{visual(typeName)}<div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{h1}{subs}{btns}</div></div>); break
-    case 'fullbleed': body = (<div style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column', gap: 10, justifyContent: 'flex-end', background: `linear-gradient(135deg, ${style.muted}, ${style.bg})`, borderRadius: 10, padding: 14, border: `1px solid ${style.line}` }}>{h1}{subs}{btns}</div>); break
-    case 'asymmetric': body = (<div className="skel-2col" style={{ gridTemplateColumns: '1.4fr .8fr' }}><div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{h1}{subs}{btns}{cards3}</div><div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{visual('overlap card')}{visual('proof')}</div></div>); break
-    case 'formfirst': body = (<div className="skel-2col"><div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{h1}{subs}<div className="skel-sub" />{cards3}</div>{form}</div>); break
-    case 'singlescreen': body = (<div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center', textAlign: 'center' }}>{h1}{subs}{form}</div>); break
-    case 'longscroll': body = (<><div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{h1}{subs}{btns}</div>{visual('hero')}{cards3}{visual('proof')}{cards3}</>); break
-    case 'zigzag': body = (<><div className="skel-2col"><div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>{h1}{subs}</div>{visual('row 1')}</div><div className="skel-2col">{visual('row 2')}<div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>{h1}{subs}</div></div></>); break
-    case 'bento': body = (<><div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>{h1}{subs}</div><div className="skel-bento"><div /><div /><div /></div><div className="skel-bento" style={{ minHeight: 70 }}><div /><div /><div /></div></>); break
-    case 'editorial': body = (<div className="skel-2col" style={{ gridTemplateColumns: '.9fr 1.1fr' }}><div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>{h1}{subs}{subs}{subs}</div>{visual('sticky visual')}</div>); break
-    case 'tabbed': body = (<><div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{h1}{subs}</div><div className="skel-tabs"><div className="skel-tab on" /><div className="skel-tab" /><div className="skel-tab" /><div className="skel-tab" /></div>{visual('tab panel')}</>); break
-    default: body = (<>{h1}{subs}{btns}</>)
+  if (typeId === 'demo') {
+    return (
+      <div className="rp-cal">
+        <div className="rp-cal-head">Pick a time · 20 min</div>
+        <div className="rp-cal-days">{['M', 'T', 'W', 'T', 'F'].map((d, i) => <span key={i} className={i === 2 ? 'on' : ''}>{d}</span>)}</div>
+        <div className="rp-cal-times">{['9:30', '11:00', '13:15', '15:45'].map((x, i) => <span key={i} className={i === 1 ? 'on' : ''}>{x}</span>)}</div>
+        <div className="rp-btn solid sm">{c.cta1}</div>
+      </div>
+    )
   }
+  if (typeId === 'webinar') {
+    return (
+      <div className="rp-video">
+        <div className="rp-live">● LIVE · MAR 14</div>
+        <div className="rp-play">▶</div>
+        <div className="rp-count">{['02', '14', '33'].map((x, i) => <span key={i}>{x}</span>)}</div>
+      </div>
+    )
+  }
+  if (typeId === 'pricing') {
+    return (
+      <div className="rp-miniplans">
+        {(c.plans.length ? c.plans : COPY.sales.plans).map((p, i) => (
+          <div key={i} className={'rp-minip' + (i === 1 ? ' hot' : '')}>
+            <b>{p[0]}</b><div className="rp-minip-price">{p[1]}<span>/mo</span></div>
+            <i>{p[2][0]}</i>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  if (typeId === 'waitlist' || typeId === 'viral') {
+    return (
+      <div className="rp-queue">
+        <div className="rp-avatars">{['MK', 'JT', 'PS', '+'].map((x, i) => <span key={i}>{x}</span>)}</div>
+        <div className="rp-pos">#2,431 in line</div>
+        <div className="rp-bar"><i style={{ width: '68%' }} /></div>
+        <div className="rp-link">nebula.app/r/maya-84 ⧉</div>
+        <div className="rp-btn solid sm">{c.cta1}</div>
+      </div>
+    )
+  }
+  if (typeId === 'squeeze') {
+    return (
+      <div className="rp-mail">
+        <div className="rp-mail-title">The 9-line late-payment killer</div>
+        <div className="rp-field">you@studio.com</div>
+        <div className="rp-btn solid sm">{c.cta1}</div>
+        <div className="rp-micro2">Join 8,400 freelancers</div>
+      </div>
+    )
+  }
+  if (typeId === 'upsell') {
+    return (
+      <div className="rp-offer">
+        <div className="rp-check">✓</div>
+        <div className="rp-offer-title">Annual Studio</div>
+        <div className="rp-offer-price"><s>$348</s> $278 <span>/yr</span></div>
+        <div className="rp-btn solid sm">{c.cta1}</div>
+      </div>
+    )
+  }
+  // default: SaaS dashboard browser mock
   return (
-    <div className="skel" style={css}>
-      {nav}
-      <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', opacity: .55 }}>{typeName} · {layout} · {style.id}</div>
-      {body}
+    <div className="rp-browser">
+      <div className="rp-bdots"><i /><i /><i /><span>{brand.toLowerCase()}.app</span></div>
+      <div className="rp-bstat"><b>$12,480</b><span>collected · +38%</span></div>
+      <div className="rp-chart">{[38, 62, 45, 80, 58, 92, 70].map((h, i) => <i key={i} style={{ height: h + '%' }} />)}</div>
+      <div className="rp-brows">
+        {['Invoice #1042 — Paid', 'Reminder → Jonas — Opened', 'Late fee — guarded'].map((x, i) => <div key={i} className="rp-brow">{x}</div>)}
+      </div>
+    </div>
+  )
+}
+
+/* ---------- the real landing page ---------- */
+function RealPage({ typeId, layout, style, product, mobile }) {
+  const c = COPY[typeId]
+  const { brand, tag } = parseProduct(product)
+  const vars = {
+    '--rp-bg': style.bg, '--rp-ink': style.ink, '--rp-accent': style.accent,
+    '--rp-line': style.line, '--rp-radius': style.radius + 'px',
+    '--rp-mutedbg': style.muted, '--rp-hfont': HEADING_FONT[style.id],
+  }
+  const noNav = typeId === 'squeeze' || typeId === 'upsell'
+  const single = layout === 'singlescreen'
+
+  const copyBlock = (center) => (
+    <div className={'rp-copy' + (center ? ' center' : '')}>
+      <div className="rp-kicker">{c.kicker}</div>
+      <h1 className="rp-h1">{c.h1}</h1>
+      <p className="rp-sub">{typeId === 'sales' || typeId === 'lead-gen' || typeId === 'click-through' ? `${brand}: ${tag}.` : c.sub}</p>
+      <div className="rp-ctas">
+        <span className="rp-btn solid">{c.cta1}</span>
+        {c.cta2 && !single && <span className="rp-btn ghost">{c.cta2}</span>}
+      </div>
+      <div className="rp-micro2">★★★★★ {c.micro}</div>
+    </div>
+  )
+
+  const formCard = (
+    <div className="rp-formcard">
+      <b>{typeId === 'demo' ? 'Book your 20 minutes' : typeId === 'webinar' ? 'Reserve your seat' : `Get started with ${brand}`}</b>
+      <span className="rp-field">Name</span>
+      <span className="rp-field">you@studio.com</span>
+      <span className="rp-btn solid sm">{c.cta1}</span>
+      <i>Free · No card · Cancel anytime</i>
+    </div>
+  )
+
+  // HERO per layout
+  let hero = null
+  if (layout === 'centered' || layout === 'longscroll' || single) {
+    hero = <div className="rp-hero-center">{copyBlock(true)}<HeroVisual typeId={typeId} style={style} brand={brand} /></div>
+  } else if (layout === 'split-left') {
+    hero = <div className="rp-hero-2">{copyBlock(false)}<HeroVisual typeId={typeId} style={style} brand={brand} /></div>
+  } else if (layout === 'split-right') {
+    hero = <div className="rp-hero-2"><HeroVisual typeId={typeId} style={style} brand={brand} />{copyBlock(false)}</div>
+  } else if (layout === 'fullbleed') {
+    hero = <div className="rp-hero-bleed"><div className="rp-bleed-copy">{copyBlock(false)}</div></div>
+  } else if (layout === 'asymmetric') {
+    hero = (
+      <div className="rp-hero-asym">
+        <div>{copyBlock(false)}</div>
+        <div className="rp-asym-side"><HeroVisual typeId={typeId} style={style} brand={brand} />
+          <div className="rp-overlap">▲ +38% collected<div>avg. first month</div></div>
+        </div>
+      </div>
+    )
+  } else if (layout === 'formfirst') {
+    hero = <div className="rp-hero-2">{copyBlock(false)}{formCard}</div>
+  } else if (layout === 'zigzag' || layout === 'editorial') {
+    hero = <div className="rp-hero-2">{copyBlock(false)}<HeroVisual typeId={typeId} style={style} brand={brand} /></div>
+  } else if (layout === 'bento' || layout === 'tabbed') {
+    hero = <div className="rp-hero-center slim">{copyBlock(true)}</div>
+  }
+
+  // BODY per type+layout
+  const features = c.bullets.length ? c.bullets : [['Fast setup', 'Live in an afternoon.'], ['Real support', 'Humans, under 2 min.'], ['Cancel anytime', 'Two clicks, keep data.']]
+  let body = null
+  if (!single) {
+    if (layout === 'bento') {
+      body = (
+        <div className="rp-bento">
+          <div className="rp-bcell big"><b>{features[0][0]}</b><p>{features[0][1]}</p><div className="rp-bignum">71%</div><span>faster payouts</span></div>
+          <div className="rp-bcell"><b>{typeId === 'viral' ? 'Rewards' : 'Proof'}</b><p>“{c.quote}”</p></div>
+          <div className="rp-bcell"><b>{features[1] ? features[1][0] : 'Live'}</b><p>{features[1] ? features[1][1] : ''}</p></div>
+          <div className="rp-bcell"><b>Rating</b><p>★★★★★ 4.9 · 2,300 reviews</p></div>
+          <div className="rp-bcell"><b>{features[2] ? features[2][0] : 'Guarantee'}</b><p>{features[2] ? features[2][1] : '30-day money-back.'}</p></div>
+          <div className="rp-bcell accent"><b>{c.cta1}</b><p>{c.micro}</p></div>
+        </div>
+      )
+    } else if (layout === 'zigzag') {
+      body = (
+        <div className="rp-zig">
+          {features.map((f, i) => (
+            <div key={i} className="rp-zrow">
+              {i % 2 === 0 ? <><div><b>{f[0]}</b><p>{f[1]} Real customers use this daily — set it once, it runs itself, and the money trail is always visible.</p></div><div className="rp-zvis">{['⌁ chase flow', '◈ pay links', '⬣ guard'][i] || '◈ detail'}</div></>
+                : <><div className="rp-zvis">{['◈ pay links', '⬣ guard', '⌁ chase flow'][i] || '⬣ detail'}</div><div><b>{f[0]}</b><p>{f[1]} Real customers use this daily — set it once, it runs itself, and the money trail is always visible.</p></div></>}
+            </div>
+          ))}
+          <div className="rp-quote">“{c.quote}”<span>— {c.author}</span></div>
+        </div>
+      )
+    } else if (layout === 'tabbed') {
+      body = (
+        <div className="rp-tabs">
+          <div className="rp-tabbar">{['Invoices', 'Reminders', 'Guard', 'Reports'].map((x, i) => <span key={i} className={i === 0 ? 'on' : ''}>{x}</span>)}</div>
+          <div className="rp-tabpanel"><b>{features[0][0]} — in one click</b><p>{features[0][1]} Switch tabs to explore reminders, guard and reports. Everything stays in the same calm view.</p><HeroVisual typeId={typeId} style={style} brand={brand} /></div>
+        </div>
+      )
+    } else if (layout === 'editorial') {
+      body = (
+        <div className="rp-ed">
+          <div className="rp-ed-main">
+            <p><span className="rp-drop">{c.quote.charAt(0)}</span>{c.quote} That is what {brand} customers say within the first month — and the reason is unglamorous: the follow-up finally happens on time, every time.</p>
+            <div className="rp-pull">“{c.quote}”</div>
+            <p>{features.map(f => f[0]).join(' · ')}. Each one removes a Friday-afternoon chore from your calendar. The rest of this page shows exactly how — keep scrolling.</p>
+          </div>
+          <div className="rp-ed-side"><HeroVisual typeId={typeId} style={style} brand={brand} /><div className="rp-quote sm">— {c.author}</div></div>
+        </div>
+      )
+    } else {
+      body = (
+        <>
+          {(typeId === 'sales' || typeId === 'lead-gen' || typeId === 'click-through') && (
+            <div className="rp-logos">{['FORBES', 'TC', 'WIRED', 'FASTCO', 'VERGE'].map((x, i) => <span key={i}>{x}</span>)}</div>
+          )}
+          {(typeId === 'pricing' || (typeId === 'sales' && layout === 'longscroll')) && (
+            <div className="rp-plans">
+              {(c.plans.length ? c.plans : COPY.sales.plans).map((p, i) => (
+                <div key={i} className={'rp-plan' + (i === 1 ? ' hot' : '')}>
+                  <b>{p[0]}</b><div className="rp-price">{p[1]}<span>/mo</span></div>
+                  {p[2].map((f, j) => <span key={j} className="rp-feat">✓ {f}</span>)}
+                  <span className="rp-btn solid sm">{i === 1 ? c.cta1 : 'Choose'}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="rp-feats">
+            {features.map((f, i) => <div key={i} className="rp-feat-card"><div className="rp-ico">{['✦', '◈', '⬣', '⌁'][i % 4]}</div><b>{f[0]}</b><p>{f[1]}</p></div>)}
+          </div>
+          <div className="rp-quote">“{c.quote}”<span>— {c.author}</span></div>
+          {layout === 'longscroll' && (
+            <div className="rp-faq">{['How fast is setup?', 'What if clients hate reminders?', 'Can I cancel anytime?'].map((x, i) => <div key={i} className="rp-faqrow"><b>{x}</b><p>Under an afternoon. Polite by default, firm when needed. Two clicks to leave, data exports with you.</p></div>)}</div>
+          )}
+          <div className="rp-final"><b>{c.h1}</b><span className="rp-btn solid">{c.cta1}</span><i>{c.micro}</i></div>
+        </>
+      )
+    }
+  }
+
+  return (
+    <div className={`rp-outer${mobile ? ' mob' : ''}`}>
+      <div className="rp-chrome"><i /><i /><i /><span>{brand.toLowerCase()}.com — {typeId} · {layout} · {style.id}</span></div>
+      <div className={`rp st-${style.id}`} style={vars}>
+        <div className="rp-fx" />
+        {!noNav ? (
+          <div className="rp-nav"><b className="rp-brand">{brand}</b><span className="rp-links">Features · Proof · Pricing</span><span className="rp-navcta">{c.cta1}</span></div>
+        ) : (
+          <div className="rp-nav mini"><b className="rp-brand">{brand}</b><span className="rp-links">No spam · Unsubscribe anytime</span></div>
+        )}
+        {hero}
+        {body}
+        <div className="rp-foot">© 2026 {brand} · Privacy · Terms · {style.name}</div>
+      </div>
     </div>
   )
 }
@@ -86,6 +294,7 @@ export default function App() {
   const [layout, setLayout] = useState('split-left')
   const [style, setStyle] = useState('minimal')
   const [product, setProduct] = useState('Acme, AI invoicing for freelancers')
+  const [mobile, setMobile] = useState(false)
   const [copied, setCopied] = useState('')
   const [q, setQ] = useState('')
 
@@ -99,7 +308,7 @@ export default function App() {
     for (const tt of TYPES) for (const ll of LAYOUTS) for (const ss of STYLES) {
       const label = `${tt.id} ${ll.id} ${ss.id} ${tt.name} ${ll.name} ${ss.name}`
       if (!q || label.toLowerCase().includes(q.toLowerCase())) out.push({ tt, ll, ss })
-      if (out.length >= 240) break
+      if (out.length >= 200) break
     }
     return out
   }, [q])
@@ -116,7 +325,7 @@ export default function App() {
         <header className="hero">
           <span className="badge">npx skills add berlified/landing-skill</span>
           <h1>Every landing page is<br /><span className="grad">TYPE × LAYOUT × STYLE</span></h1>
-          <p className="sub">Pick the goal, pick the orientation, pick the look. Get a skeleton preview + a copy-paste <b>/landing</b> command. 11 types · 12 layouts · 10 styles.</p>
+          <p className="sub">A <b>real page preview</b> for every triple — real headlines, real sections, real styling. Pick one, copy the <b>/landing</b> command into Claude.</p>
           <div className="install">
             <code>{INSTALL_CMD}</code>
             <button className="btn btn-primary" onClick={() => copy(INSTALL_CMD, setCopied)}>{copied ? 'Copied ✓' : 'Copy'}</button>
@@ -125,12 +334,18 @@ export default function App() {
             <div className="stat"><b>11</b><span>page types</span></div>
             <div className="stat"><b>12</b><span>layouts</span></div>
             <div className="stat"><b>10</b><span>styles</span></div>
-            <div className="stat"><b>{TOTAL.toLocaleString()}</b><span>combinations</span></div>
+            <div className="stat"><b>{TOTAL.toLocaleString()}</b><span>live previews</span></div>
           </div>
         </header>
 
         <div className="playground" id="playground">
-          <div className="pg-head"><b>◧ Playground — build your triple</b><span>preview updates live · command copies to Claude</span></div>
+          <div className="pg-head">
+            <b>◧ Playground — {t.name} × {l.name} × {s.name}</b>
+            <span style={{ display: 'flex', gap: 8 }}>
+              <button className={'btn btn-small' + (!mobile ? ' btn-primary' : '')} onClick={() => setMobile(false)}>Desktop</button>
+              <button className={'btn btn-small' + (mobile ? ' btn-primary' : '')} onClick={() => setMobile(true)}>Mobile 390</button>
+            </span>
+          </div>
           <div className="pg-body">
             <div className="pg-col">
               <h3>1 · Type — {TYPES.length}</h3>
@@ -153,8 +368,8 @@ export default function App() {
               ))}
             </div>
             <div className="preview-stage">
-              <Skeleton layout={layout} style={s} typeName={t.name} />
-              <div style={{ fontSize: 12, color: 'var(--muted)' }}>Skeleton wireframe — structure shows LAYOUT, colors show STYLE, sections show TYPE. Real copy is generated by the skill.</div>
+              <RealPage typeId={type} layout={layout} style={s} product={product} mobile={mobile} />
+              <div style={{ fontSize: 12, color: 'var(--muted)' }}>Live page preview — scroll inside the browser frame. Structure = LAYOUT · copy + sections = TYPE · look = STYLE.</div>
             </div>
             <div className="pg-col">
               <div className="cmdbox">
@@ -184,20 +399,21 @@ export default function App() {
         </div>
 
         <section className="section" id="types">
-          <h2>11 page types</h2>
-          <p className="lead">Goal decides sections + copy + CTA. Click any card to load it into the playground.</p>
+          <h2>11 page types — different copy, sections & CTAs</h2>
+          <p className="lead">Click any card to load a live preview into the playground.</p>
           <div className="grid types">
             {TYPES.map(x => (
               <button key={x.id} className={'card' + (x.id === type ? ' sel' : '')} onClick={() => { setType(x.id); document.getElementById('playground').scrollIntoView() }}>
                 <code>{x.id}</code><b>{x.name}</b><p>{x.goal} · CTA: {x.cta}</p>
+                <p style={{ marginTop: 6, color: 'var(--ink)', opacity: .8 }}>“{COPY[x.id].h1}”</p>
               </button>
             ))}
           </div>
         </section>
 
         <section className="section" id="layouts">
-          <h2>12 layout orientations</h2>
-          <p className="lead">Order + grid only. Every layout stacks to single column on mobile.</p>
+          <h2>12 layouts — different order & grid</h2>
+          <p className="lead">Wireframe logic. The playground renders each one as a real page.</p>
           <div className="grid layouts">
             {LAYOUTS.map(x => (
               <button key={x.id} className={'card' + (x.id === layout ? ' sel' : '')} onClick={() => { setLayout(x.id); document.getElementById('playground').scrollIntoView() }}>
@@ -208,13 +424,13 @@ export default function App() {
         </section>
 
         <section className="section" id="styles">
-          <h2>10 visual styles</h2>
-          <p className="lead">Tokens only — fonts, palette, radius, shadow. Never changes structure.</p>
+          <h2>10 styles — different look, same structure</h2>
+          <p className="lead">Fonts, palette, radius, shadow, texture. Try the same triple in dark vs brutalist vs serif.</p>
           <div className="grid styles">
             {STYLES.map(x => (
               <button key={x.id} className={'card' + (x.id === style ? ' sel' : '')} onClick={() => { setStyle(x.id); document.getElementById('playground').scrollIntoView() }} style={{ borderTop: `6px solid ${x.accent}` }}>
                 <div style={{ background: x.bg, border: `1px solid ${x.line}`, borderRadius: 8, padding: 10, marginBottom: 10 }}>
-                  <div style={{ fontFamily: x.font, color: x.ink, fontWeight: 800, fontSize: 15 }}>Aa Headline</div>
+                  <div style={{ fontFamily: HEADING_FONT[x.id], color: x.ink, fontWeight: 800, fontSize: 15 }}>Aa Headline</div>
                   <div style={{ display: 'flex', gap: 5, marginTop: 8 }}><span style={{ background: x.accent, borderRadius: 99, height: 16, width: 52, display: 'block' }} /><span style={{ background: x.muted, borderRadius: 99, height: 16, width: 52, display: 'block', border: `1px solid ${x.line}` }} /></div>
                 </div>
                 <code>{x.id}</code><b>{x.name}</b><p>{x.note}</p>
@@ -225,7 +441,7 @@ export default function App() {
 
         <section className="section" id="combos">
           <h2>All commands <span style={{ color: 'var(--muted)', fontSize: 16 }}>· showing {combos.length} of {TOTAL.toLocaleString()}</span></h2>
-          <p className="lead">Every combination is mechanical: <code style={{ color: 'var(--accent)' }}>/landing --type TYPE --layout LAYOUT --style STYLE "product"</code>. Search to filter, click to copy.</p>
+          <p className="lead">Every combination is mechanical: <code style={{ color: 'var(--accent)' }}>/landing --type TYPE --layout LAYOUT --style STYLE "product"</code>. Search, then Copy + preview loads the real page above.</p>
           <div className="toolbar"><input placeholder="Filter e.g. waitlist bento dark…" value={q} onChange={e => setQ(e.target.value)} /></div>
           <div className="combos">
             {combos.map((c, i) => {
@@ -234,7 +450,7 @@ export default function App() {
                 <div key={i} className="combo">
                   <b>{c.tt.name} × {c.ll.name} × {c.ss.name}</b>
                   <code>{cc}</code>
-                  <button className="btn btn-small" onClick={() => { copy(cc, setCopied); setType(c.tt.id); setLayout(c.ll.id); setStyle(c.ss.id) }}>Copy + preview</button>
+                  <button className="btn btn-small" onClick={() => { copy(cc, setCopied); setType(c.tt.id); setLayout(c.ll.id); setStyle(c.ss.id); document.getElementById('playground').scrollIntoView() }}>Copy + preview</button>
                 </div>
               )
             })}

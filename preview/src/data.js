@@ -40,10 +40,98 @@ export const STYLES = [
   { id: 'serif', name: 'Editorial Serif', font: 'Fraunces serif', bg: '#faf6ef', ink: '#1c1917', muted: '#f5f0e8', accent: '#9a3412', line: '#e7e5e4', radius: 6, note: 'Cream · rules · drop caps' },
 ]
 
+// Real copy per type — drives the live page preview (headlines, bullets, proof, specials)
+export const COPY = {
+  'sales': {
+    kicker: 'New · AI invoicing', h1: 'Get paid in days, not months', sub: 'Acme writes, sends and chases invoices for you — no awkward follow-ups, no spreadsheets.',
+    cta1: 'Start free', cta2: 'See proof', micro: 'Free 14-day trial · No card · 4.9/5 from 2,300 freelancers',
+    bullets: [['Auto-chase', 'Polite reminders on day 3, 7, 14.'], ['One-click pay', 'Card, bank & wallet links in every invoice.'], ['Late-fee guard', 'Terms enforced automatically.']],
+    quote: 'Went from 41 days average to 6. It paid for itself by Tuesday.', author: 'Maya R. — freelance designer',
+    plans: [['Starter', '$12', ['50 invoices/mo', 'Auto-reminders', '1 seat']], ['Studio', '$29', ['Unlimited invoices', 'Late-fee guard', '5 seats']], ['Firm', '$79', ['Everything + API', 'White-label', 'Priority support']]],
+  },
+  'lead-gen': {
+    kicker: 'Free template', h1: 'Get the invoice kit that gets you paid', sub: 'The exact templates + chase scripts 2,300 freelancers use to cut late payments by 71%.',
+    cta1: 'Get free audit', cta2: 'How it works', micro: 'Free PDF · 12 pages · No spam, ever',
+    bullets: [['12 copy-paste templates', 'Invoices, reminders, late-fee notes.'], ['Chase calendar', 'Know exactly when to nudge.'], ['Pricing teardown', 'Stop undercharging quietly.']],
+    quote: 'Used one template, got a 4-month-late invoice paid in 48h.', author: 'Jonas K. — photographer',
+    plans: [],
+  },
+  'click-through': {
+    kicker: 'Why Acme?', h1: 'The fastest way from work done to money in', sub: 'Three pains, one fix. See why independents switch — then continue to pricing when ready.',
+    cta1: 'Continue →', cta2: 'Compare plans', micro: '2-min read · Then pick a plan',
+    bullets: [['Pain: chasing', 'You spend Fridays writing “gentle bumps”.'], ['Pain: spreadsheets', 'Five tabs to know who owes what.'], ['Fix: autopilot', 'Acme does the follow-up for you.']],
+    quote: 'I clicked through skeptical. Signed up at the pricing table.', author: 'Priya S. — consultant',
+    plans: [],
+  },
+  'squeeze': {
+    kicker: 'Free checklist', h1: 'Free: the 9-line late-payment killer', sub: 'One page. Nine lines to paste into every invoice. Paid 2× faster or delete it.',
+    cta1: 'Send it to me', cta2: '', micro: 'Join 8,400 freelancers · Unsubscribe anytime',
+    bullets: [['9 paste-in lines', 'Drop into any invoice tool.'], ['Works in 11 min', 'No new software needed.'], ['2,100+ wins', 'Screenshots inside.']],
+    quote: 'Got a $3,200 invoice paid 3 days after using line #4.', author: 'Diego M. — developer',
+    plans: [],
+  },
+  'waitlist': {
+    kicker: 'Launching March', h1: 'Nebula is almost here', sub: 'The AI habit tracker that plans your day around your energy. Early members lock founding pricing forever.',
+    cta1: 'Join waitlist', cta2: '', micro: '#2,431 in line · Invite friends to jump ahead',
+    bullets: [['Founding price', '50% off for life for the first 1,000.'], ['Early access', 'iOS beta opens in 3 weeks.'], ['Vote on features', 'Members shape the roadmap.']],
+    quote: 'The teaser alone fixed my mornings. I need the app.', author: 'Beta tester #118',
+    plans: [],
+  },
+  'viral': {
+    kicker: 'Skip the line', h1: 'Invite friends. Unlock the drop.', sub: 'Every friend moves you up 50 spots. Top 100 get the limited enamel pin + lifetime Pro.',
+    cta1: 'Get my link', cta2: 'See rewards', micro: 'Your link is ready · 3 invites = 1 month Pro',
+    bullets: [['3 invites → Pro month', 'Stack up to 12 months free.'], ['10 invites → pin', 'Numbered enamel drop.'], ['Top 100 → lifetime', 'Founding legend status.']],
+    quote: 'Went from #4,102 to #37 in a weekend. Worth it.', author: 'Sam T. — referrer #37',
+    plans: [],
+  },
+  'pricing': {
+    kicker: 'Pricing', h1: 'Simple pricing that scales with you', sub: 'Start free. Upgrade when the money lands. Downgrade anytime with two clicks.',
+    cta1: 'Choose Studio', cta2: 'Compare all', micro: 'Yearly saves 20% · 30-day money-back guarantee',
+    bullets: [],
+    quote: 'Studio paid for itself with the first chased invoice.', author: 'Lena W. — agency owner',
+    plans: [['Starter', '$12', ['50 invoices/mo', 'Auto-reminders', '1 seat']], ['Studio', '$29', ['Unlimited invoices', 'Late-fee guard', '5 seats']], ['Firm', '$79', ['Everything + API', 'White-label', 'Priority support']]],
+  },
+  'demo': {
+    kicker: 'Live 20-min demo', h1: 'See Acme on your own invoices', sub: 'Bring one messy client. We will chase them live and show you the money trail.',
+    cta1: 'Book my demo', cta2: 'Watch 2-min tour', micro: 'Tue–Thu slots · No pitch-slides, real product',
+    bullets: [['Your data live', 'We plug in one real client.'], ['Chase teardown', 'See the exact reminder flow.'], ['Q&A with founder', 'Ask anything, get numbers.']],
+    quote: 'Booked Tuesday, paid-up Friday. The demo sold me.', author: 'Chris B. — studio lead',
+    plans: [],
+  },
+  'webinar': {
+    kicker: 'Free live training · Mar 14', h1: 'Get paid 2× faster: live teardown', sub: '60 minutes. 3 real freelancer inboxes fixed live. Replay free for 48 hours.',
+    cta1: 'Save my seat', cta2: 'See agenda', micro: '1,842 registered · 200 seats left · Free replay 48h',
+    bullets: [['The 3-email chase', 'Copy-paste sequence, live demo.'], ['Pricing fixes', 'Two tweaks that end haggling.'], ['Late-fee scripts', 'Firm without burning bridges.'], ['Live Q&A', 'Bring your worst client story.']],
+    quote: 'Left with 4 templates. Used 2 the same night.', author: 'Attendee, Feb cohort',
+    plans: [],
+  },
+  'app': {
+    kicker: 'iOS + Android', h1: 'Invoicing in your pocket', sub: 'Snap a receipt, send an invoice, nudge a client — from the train. 4.9★ from 12k reviews.',
+    cta1: 'Download', cta2: 'See screenshots', micro: '4.9★ · 12k ratings · Free plan included',
+    bullets: [['Snap → invoice', 'Photo to sent in 40 seconds.'], ['Push on payment', 'Know the second money lands.'], ['Offline first', 'Tube, plane, basement. Works.']],
+    quote: 'Sent an invoice from a ski lift. Paid before après.', author: 'Nina F. — 5★ review',
+    plans: [],
+  },
+  'upsell': {
+    kicker: 'You are in ✓', h1: 'Welcome! One more thing…', sub: 'Annual Studio saves you $70 and adds late-fee guard + white-label. Offer ends when this page closes.',
+    cta1: 'Claim annual offer', cta2: 'Go to dashboard', micro: '30-day guarantee · Keep monthly if you prefer',
+    bullets: [['Save $70/yr', 'Two months free, locked.'], ['Late-fee guard', 'Auto-enforced terms.'], ['White-label', 'Your logo, your domain.']],
+    quote: 'Upgraded on the thank-you page. Zero regrets.', author: 'Tom H. — new member',
+    plans: [],
+  },
+}
+
 export const INSTALL_CMD = 'npx skills add berlified/landing-skill -g -a claude-code'
 
 export function landingCommand(type, layout, style, product = 'Acme, AI invoicing for freelancers') {
   return `/landing --type ${type} --layout ${layout} --style ${style} "${product}"`
+}
+
+export function parseProduct(product) {
+  const parts = String(product).split(',')
+  const brand = (parts[0] || 'Acme').trim() || 'Acme'
+  const tag = (parts.slice(1).join(',') || 'AI invoicing for freelancers').trim()
+  return { brand, tag }
 }
 
 export const TOTAL = TYPES.length * LAYOUTS.length * STYLES.length // 1320
