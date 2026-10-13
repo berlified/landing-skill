@@ -1,15 +1,15 @@
 /* ============ iso-bento 3D engine (pure CSS, no deps) ============ */
 .iso-viewport{
   --tilt:54deg; --spin:45deg; --cols:3; --cell:118px;
-  perspective:1500px; overflow:hidden; border-radius:18px;
+  perspective:1700px; overflow:hidden; border-radius:20px;
   background:
     radial-gradient(500px 260px at 50% 0%, color-mix(in srgb, var(--ib-accent) 12%, transparent), transparent 70%),
     var(--ib-bg);
   border:1px solid var(--ib-line);
-  padding:44px 30px 54px;
+  padding:56px 38px 68px;
   position:relative;
 }
-.iso-viewport.tall{padding:60px 40px 76px}
+.iso-viewport.tall{padding:74px 50px 92px}
 .iso-shadow{
   position:absolute; left:12%; right:12%; bottom:26px; height:40px;
   background:radial-gradient(closest-side, rgba(0,0,0,.45), transparent);
@@ -22,7 +22,7 @@
   transform-style:preserve-3d; transform:rotateX(var(--tilt));
   display:grid; grid-template-columns:repeat(var(--cols), minmax(0, 1fr));
   grid-auto-rows:var(--cell); gap:24px;
-  width:100%; max-width:640px; margin:0 auto;
+  width:100%; max-width:720px; margin:0 auto;
 }
 .iso-tile{position:relative; transform-style:preserve-3d; min-width:0; min-height:0; animation:tileIn .45s ease-out both; animation-delay:calc(var(--i) * 65ms);}
 .iso-rise{position:absolute; inset:0; transform-style:preserve-3d; animation:floaty 5.2s ease-in-out infinite; animation-delay:calc(var(--i) * -.75s);}
@@ -31,8 +31,8 @@
 .iso-side-r{position:absolute; bottom:0; left:0; width:100%; height:var(--h); transform-origin:center bottom; transform:rotateX(-90deg); background:var(--ib-sideR); filter:brightness(.8);}
 .iso-card{
   position:absolute; inset:0; transform:translateZ(var(--h));
-  background:var(--ib-card); border:1px solid var(--ib-line); border-radius:14px;
-  padding:14px; color:var(--ib-ink); overflow:hidden; font-size:13px; line-height:1.45;
+  background:var(--ib-card); border:1px solid var(--ib-line); border-radius:16px;
+  padding:16px; color:var(--ib-ink); overflow:hidden; font-size:13px; line-height:1.45;
   transition:filter .18s, border-color .18s;
 }
 .iso-tile:hover .iso-card{filter:brightness(1.15); border-color:var(--ib-accent);}
@@ -47,21 +47,21 @@
 
 /* ---- tile content (shared look w/ export) ---- */
 .t-kick{font-size:9px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--ib-accent);}
-.t-big{font-size:clamp(20px, 2.6vw + 12px, 28px); font-weight:800; letter-spacing:-0.02em; line-height:1.08; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.t-big{font-size:clamp(22px, 3vw + 14px, 32px); font-weight:800; letter-spacing:-0.02em; line-height:1.08; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .t-delta{font-size:11px; font-weight:700; color:var(--ib-accent);}
 .t-sub{font-size:10.5px; color:var(--ib-muted); margin-top:4px;}
 .t-minibars{display:flex; align-items:flex-end; gap:3px; height:26px; margin-top:6px;}
 .t-minibars i{flex:1; background:var(--ib-accent); border-radius:2px; opacity:.85;}
-.t-spark{width:100%; height:52px; color:var(--ib-accent); margin-top:4px;}
-.t-bars{display:flex; align-items:flex-end; gap:4px; height:56px; margin-top:6px;}
+.t-spark{width:100%; height:60px; color:var(--ib-accent); margin-top:4px;}
+.t-bars{display:flex; align-items:flex-end; gap:4px; height:64px; margin-top:6px;}
 .t-bars i{flex:1; background:linear-gradient(180deg, var(--ib-accent), transparent); border-radius:3px;}
 .t-avs{display:flex; margin:8px 0 4px;}
 .t-avs span{width:26px; height:26px; border-radius:99px; background:var(--ib-accent); color:var(--ib-bg); font-size:8.5px; font-weight:800; display:grid; place-items:center; border:2px solid var(--ib-card); margin-left:-8px;}
 .t-avs span:first-child{margin:0;}
-.t-code{font-family:ui-monospace,Menlo,monospace; font-size:10.5px; line-height:1.7;}
+.t-code{font-family:ui-monospace,Menlo,monospace; font-size:11px; line-height:1.7;}
 .t-code .p{color:var(--ib-accent);} .t-code .g{color:#4ade80;}
-.t-img{border-radius:9px; background:linear-gradient(135deg, var(--ib-accent), transparent 135%); min-height:64px; display:grid; place-items:center; font-size:26px; color:var(--ib-bg); margin-bottom:4px;}
-.t-ring{width:64px; height:64px; color:var(--ib-accent); margin-top:2px;}
+.t-img{border-radius:9px; background:linear-gradient(135deg, var(--ib-accent), transparent 135%); min-height:76px; display:grid; place-items:center; font-size:28px; color:var(--ib-bg); margin-bottom:4px;}
+.t-ring{width:72px; height:72px; color:var(--ib-accent); margin-top:2px;}
 .t-ctatitle{font-size:17px; font-weight:800; margin:2px 0 6px;}
 .t-btn{display:inline-block; background:var(--ib-accent); color:var(--ib-bg); font-weight:800; font-size:11.5px; border-radius:99px; padding:8px 14px;}
 
@@ -70,7 +70,7 @@
 
 /* ============ Designer view: screen-aligned cards, stepped extrude ============ */
 .flat-scene{
-  border-radius:18px; padding:30px 28px 40px; position:relative; overflow:hidden;
+  border-radius:20px; padding:36px 32px 48px; position:relative; overflow:hidden;
   background:
     radial-gradient(500px 260px at 50% 0%, color-mix(in srgb, var(--ib-accent) 10%, transparent), transparent 70%),
     var(--ib-bg);
@@ -78,13 +78,13 @@
 }
 .flat-grid{
   display:grid; grid-template-columns:repeat(var(--cols), minmax(0, 1fr));
-  grid-auto-rows:var(--cell); gap:26px; max-width:680px; margin:0 auto;
+  grid-auto-rows:var(--cell); gap:28px; max-width:740px; margin:0 auto;
 }
 .flat-tile{position:relative; min-width:0; min-height:0; animation:tileIn .45s ease-out both; animation-delay:calc(var(--i) * 60ms);}
 .flat-card{
   height:100%; background:var(--ib-card); border:1px solid var(--ib-line);
   border-top-color:color-mix(in srgb, #fff 16%, transparent);
-  border-radius:14px; padding:14px; color:var(--ib-ink); overflow:hidden;
+  border-radius:16px; padding:16px; color:var(--ib-ink); overflow:hidden;
   font-size:13px; line-height:1.45; transition:filter .18s, border-color .18s;
 }
 .flat-tile:hover .flat-card{filter:brightness(1.1); border-color:var(--ib-accent);}

@@ -141,7 +141,7 @@ export default function App() {
             </div>
           </div>
           <div>
-            <FlatScene layout={LAYOUTS.find(l => l.id === 'mosaic')} palette={PALETTES[0]} extrude={1} cell={92} brand={brand} tag={false} />
+            <FlatScene layout={LAYOUTS.find(l => l.id === 'mosaic')} palette={PALETTES[0]} extrude={1} cell={112} brand={brand} tag={false} />
             <div className="stage-note" style={{ marginTop: 10 }}>mosaic × lime-dark · {LAYOUTS.find(l => l.id === 'mosaic').tiles.length} tiles · hover any tile — it brightens. <a href="#playground" style={{ color: 'var(--accent)' }}>Remix this →</a></div>
           </div>
         </header>
@@ -156,7 +156,7 @@ export default function App() {
               <h3>Layout — {LAYOUTS.length}</h3>
               {LAYOUTS.map(l => (
                 <button key={l.id} className={'pick' + (l.id === layoutId ? ' active' : '')} onClick={() => setLayoutId(l.id)}>
-                  <b><code style={{ color: '#b9e62f', fontSize: 11 }}>{l.id}</code> · {l.name}</b><span>{l.desc}</span>
+                  <b><code style={{ color: '#0A84FF', fontSize: 11 }}>{l.id}</code> · {l.name}</b><span>{l.desc}</span>
                 </button>
               ))}
               <h3>Palette — {PALETTES.length}</h3>
@@ -185,9 +185,9 @@ export default function App() {
             </div>
             <div className="stage">
               {view === 'flat' ? (
-                <FlatScene layout={layout} palette={palette} extrude={extrude} cell={112} brand={brand} tag={true} />
+                <FlatScene layout={layout} palette={palette} extrude={extrude} cell={120} brand={brand} tag={true} />
               ) : (
-                <IsoScene layout={layout} palette={palette} tilt={tilt} spin={spin} extrude={extrude} floatOn={floatOn} orbitOn={orbitOn} cell={112} brand={brand} tag={true} tall={false} />
+                <IsoScene layout={layout} palette={palette} tilt={tilt} spin={spin} extrude={extrude} floatOn={floatOn} orbitOn={orbitOn} cell={120} brand={brand} tag={true} tall={false} />
               )}
               <div className="stage-note">Spec: {spec}. Tile tags show kind. {view === 'flat' ? 'Depth is stepped shadow — fully responsive.' : 'Drag the sliders — the projection is live.'}</div>
             </div>
@@ -230,7 +230,7 @@ export default function App() {
           <div className="grid layouts">
             {LAYOUTS.map((l, li) => (
               <div key={l.id} className="card">
-                <FlatScene layout={l} palette={PALETTES[li % PALETTES.length]} extrude={1} cell={52} brand={brand} tag={false} />
+                <FlatScene layout={l} palette={PALETTES[li % PALETTES.length]} extrude={1} cell={62} brand={brand} tag={false} />
                 <code>{l.id} · {l.cols} cols · {l.tiles.length} tiles</code>
                 <b>{l.name}</b>
                 <p>{l.desc}</p>
